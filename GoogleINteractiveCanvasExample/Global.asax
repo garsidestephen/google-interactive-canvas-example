@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="GoogleINteractiveCanvasExample.WebApiApplication" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="GoogleInteractiveCanvasExample.WebApiApplication" Language="C#" %>

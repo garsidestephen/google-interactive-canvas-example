@@ -13,8 +13,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GoogleINteractiveCanvasExample</RootNamespace>
-    <AssemblyName>GoogleINteractiveCanvasExample</AssemblyName>
+    <RootNamespace>GoogleInteractiveCanvasExample</RootNamespace>
+    <AssemblyName>GoogleInteractiveCanvasExample</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
@@ -191,6 +191,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DialogflowAgent\InteractiveCanvasDemo.zip" />
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>

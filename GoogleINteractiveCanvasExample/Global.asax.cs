@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace GoogleINteractiveCanvasExample
+namespace GoogleInteractiveCanvasExample
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
