@@ -1,0 +1,122 @@
+﻿<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Interactive Canvas Demo</title>
+
+    <!-- Disable favicon requests -->
+    <link rel="shortcut icon" type="image/x-icon" href="data:image/x-icon;,">
+    <!-- Load Assistant Interactive Canvas API -->
+    <script type="text/javascript" src="https://www.gstatic.com/assistant/interactivecanvas/api/interactive_canvas.min.js"></script>
+
+    <style type="text/css">
+        html { height: 100%; }
+        body { font-family: Arial, Helvetica, sans-serif; margin: 0; background: #ffffff; background: linear-gradient(to bottom, #ffffff 0%,#e0e0e0 100%); }
+        .heading { text-align: center; }
+        .box-holder { height: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center; }
+        .box-holder__box { width: 60px; height: 60px; display: inline-block; margin: 0 10px; box-shadow: 0px 20px 10px -10px rgba(0,0,0,0.25); }
+        .box--red { background-color: red; }
+        .box--green { background-color: green; }
+        .box--blue { background-color: blue; }
+        .hide { display: none; }
+        .text { text-align: center; }
+    </style>
+</head>
+
+<body>
+    <h1 class="heading">Google Assistant Interactive Canvas Demo</h1>
+    <p class="text">Ask me to 'Reveal the Box'</p>
+    <div class="box-holder">
+        <div id="box-red" class="box-holder__box box--red hide"></div>
+        <div id="box-green" class="box-holder__box box--green hide"></div>
+        <div id="box-blue" class="box-holder__box box--blue hide"></div>
+    </div>
+    <p id="argument" class="text"></p>
+
+    <script type="text/javascript">
+        const TRIGGER_YOUWON_UTTERANCE = "you won";
+        const TRIGGER_WHATCOLOURBOX_UTTERANCE = "box colour";
+        const TRIGGER_CORRECTCHOICE_UTTERANCE = "correct choice";
+
+        let colorsRevealed = [];
+
+        window.onload = () => {
+            // When window loads, Initiate the Interactive Canvas
+            InitInteractiveCanvas();
+        }
+
+        ///
+        /// Initiate Interactive Canvas
+        ///
+        function InitInteractiveCanvas() {
+            // Create the Interactive Canvas Callbacks Obj and pass into Google Interactive Canvas
+            const callbacks = {
+                onUpdate(data) {
+                    UpdateCanvas(data);
+                },
+            }
+
+            interactiveCanvas.ready(callbacks);
+
+            SetCanvasHeaderHeight();
+        }
+
+        ///
+        /// Set the Interactive Canvas Height so you can see top of HTML Page
+        ///
+        function SetCanvasHeaderHeight() {
+            interactiveCanvas.getHeaderHeightPx().then((height) => {
+                // initialize web app layout with header height value
+                document.getElementsByTagName("BODY")[0].style.padding = `${height}px 0px 0px 0px`;
+            })
+        }
+
+        ///
+        /// Update Canvas (Called when there is an update returned from your endpoint)
+        /// Param = 'Data' : The data from your service response
+        ///
+        function UpdateCanvas(data) {
+            // update game state based on intent response data
+            if (data && data.command) {
+                switch (data.command.toLowerCase()) {
+                    case "revealbox":
+                        RevealBox(data);
+                        break;
+                }
+            }
+        }
+
+        ///
+        /// Reveal The Box
+        /// Param = 'Data' : The data from your service response
+        ///
+        function RevealBox(data) {
+            const color = data.arguments[0];
+
+            if (color && !colorsRevealed.includes(color)) {
+                // We have a color and it has not been guessed yet so add it to those chosen
+                colorsRevealed.push(color);
+
+                // Reveal the html box element
+                document.getElementById(`box-${color}`).classList.remove('hide');
+                document.getElementById('argument').innerHTML = `${color} revealed!`;
+
+                // Have all colors been revealed?
+                if (colorsRevealed.length === 3) {
+                    // Yes, so tell user they have won (Trigger the 'You Won' Intent)
+                    window.interactiveCanvas.sendTextQuery(TRIGGER_YOUWON_UTTERANCE);
+                }
+                else {
+                    // Still colors to reveal so prompt the user for another color (Trigger the 'Correct Choice' Intent)
+                    window.interactiveCanvas.sendTextQuery(TRIGGER_CORRECTCHOICE_UTTERANCE);
+                }
+            }
+            else {
+                // Either the color is empty or the color has already been revealed
+                window.interactiveCanvas.sendTextQuery(TRIGGER_WHATCOLOURBOX_UTTERANCE);
+            }
+        }
+    </script>
+</body>
+</html>
